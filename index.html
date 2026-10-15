@@ -33,12 +33,13 @@
         input[value="出現特殊事件/異常"]:checked + .radio-label { background: #f8d7da; border-color: #dc3545; color: #721c24; }
         input[type="radio"] { display: none; }
         
-        /* 異常文字框 */
+        /* 異常文字框（預設隱藏） */
         .text-box { background: #fff5f5; border: 1px dashed #dc3545; padding: 8px; border-radius: 4px; margin-top: 6px; }
         
         button { background: #28a745; color: white; padding: 14px; border: none; border-radius: 6px; width: 100%; font-size: 18px; font-weight: bold; cursor: pointer; box-shadow: 0 3px 6px rgba(40,167,69,0.3); margin-top: 15px; }
         button:hover { background: #218838; }
         .disabled-block { opacity: 0.4; pointer-events: none; background: #e9ecef; }
+        .hidden { display: none !important; }
     </style>
 </head>
 <body>
@@ -70,8 +71,7 @@
     </div>
 
     <script>
-        // ⚠️【請注意】這裡必須換成您在 Google 重新部署後拿到的那串 Web App 網址！
-        const GOOGLE_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbzZH-mHys1rAci6ZsPhl4n1vSKha_2lHMflTgfiLrlxHMtF4t4iPqMRom9tVdpeGav7QA/exec";
+        const GOOGLE_WEB_APP_URL = "https://google.com";
 
         const clients = [
             "個案01旻哲", "個案02麗婷", "個案03宛玲", "個案04芳筑", "個案05上寧",
@@ -79,7 +79,6 @@
             "個案11宇尊", "個案12姵筑", "個案13柏翰", "個案14壽圓", "個案15培佑"
         ];
 
-        // 四個符合小作所場域適用的黃金向度
         const dimensions = [
             { id: "work", name: "技藝陶冶-分心或表現下滑" },
             { id: "inter", name: "場域人際-同儕摩擦或言語衝突" },
@@ -94,7 +93,6 @@
             block.className = "client-block";
             block.id = `block_${cIdx}`;
             
-            // 建立個別個案的頂部標題與免填開關
             let htmlStr = `
                 <div class="client-header">
                     <div class="client-name">${cName}</div>
@@ -105,7 +103,6 @@
                 <div id="matrix_${cIdx}" class="disabled-block">
             `;
             
-            // 迴圈渲染 4 個向度的矩陣按鈕
             dimensions.forEach((dim) => {
                 htmlStr += `
                     <div class="dimension-row">
@@ -120,6 +117,7 @@
                             <input type="radio" id="r_${cIdx}_${dim.id}_3" name="status_${cIdx}_${dim.id}" value="出現特殊事件/異常" onclick="toggleText(${cIdx}, '${dim.id}', true)">
                             <label for="r_${cIdx}_${dim.id}_3" class="radio-label">🔴 異常</label>
                         </div>
+                        <!-- 關鍵修改：加上了 hidden 類別，預設隱藏 -->
                         <div id="text_${cIdx}_${dim.id}" class="text-box hidden">
                             <textarea id="input_${cIdx}_${dim.id}" rows="2" placeholder="🚨 請輸入此項向度的紅燈 SOAP 處置說明..."></textarea>
                         </div>
@@ -132,7 +130,6 @@
             container.appendChild(block);
         });
 
-        // 控制該名學員今天有沒有出勤/要不要填寫
         function toggleClientBlock(cIdx) {
             const isSkip = document.getElementById(`skip_${cIdx}`).checked;
             const matrix = document.getElementById(`matrix_${cIdx}`);
@@ -143,14 +140,14 @@
             }
         }
 
-        // 當點選紅燈時，自動彈出特定向度的文字說明框
+        // 動態控制文字框顯示或隱藏
         function toggleText(cIdx, dimId, isRed) {
             const textBox = document.getElementById(`text_${cIdx}_${dimId}`);
             if (isRed) {
                 textBox.classList.remove("hidden");
             } else {
                 textBox.classList.add("hidden");
-                document.getElementById(`input_${cIdx}_${dimId}`).value = "";
+                document.getElementById(`input_${cIdx}_${dimId}`).value = ""; // 縮回時清空內容預防誤傳
             }
         }
 
@@ -163,14 +160,12 @@
             clients.forEach((cName, cIdx) => {
                 const isSkip = document.getElementById(`skip_${cIdx}`).checked;
                 
-                // 只有「取消勾選免填」的人，代表今天有紀錄，才去撈資料
                 if (!isSkip) {
                     dimensions.forEach((dim) => {
                         var statusRadio = document.querySelector(`input[name="status_${cIdx}_${dim.id}"]:checked`);
                         var statusValue = statusRadio ? statusRadio.value : "穩定獨立";
                         var detailsText = document.getElementById(`input_${cIdx}_${dim.id}`).value || "";
 
-                        // 將每個人、每個向度拆開成獨立一筆上傳
                         recordsToSend.push({
                             client: cName,
                             dimension: dim.name,
