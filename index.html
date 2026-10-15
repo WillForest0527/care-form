@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>外售每日紀錄勾選</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; background: #f4f7f6; }
+        .form-group { margin-bottom: 15px; }
+        label { display: block; font-weight: bold; margin-bottom: 5px; }
+        input, select, textarea { width: 100%; padding: 10px; box-sizing: border-box; border: 1px solid #ccc; border-radius: 4px; }
+        button { background: #007BFF; color: white; padding: 12px; border: none; border-radius: 4px; width: 100%; font-size: 16px; cursor: pointer; }
+        .hidden { display: none; }
+    </style>
+</head>
+<body>
+    <h2>📱 外售日常照顧紀錄</h2>
+    <form id="careForm">
+        <div class="form-group">
+            <label>填報教保員：</label>
+            <input type="text" id="worker" required placeholder="請輸入您的姓名">
+        </div>
+        <div class="form-group">
+            <label>個別學員姓名：</label>
+            <select id="client">
+                <option value="個案A(小明)">個案A (小明)</option>
+                <option value="個案B(小華)">個案B (小華)</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label>今日狀態：</label>
+            <select id="status" onchange="toggleAnomaly()">
+                <option value="正常">🟢 穩定正常</option>
+                <option value="異常">🔴 出現異常</option>
+            </select>
+        </div>
+        <div id="anomalySection" class="form-group hidden">
+            <label>異常細部功能分類：</label>
+            <select id="category">
+                <option value="無">無</option>
+                <option value="環境因素-噪音自傷">環境因素 - 噪音自傷</option>
+                <option value="人際衝突-同儕搶奪">人際衝突 - 同儕搶奪</option>
+                <option value="生理因素-情緒過載">生理因素 - 情緒過載</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label>現場處置與詳情（可按語音輸入）：</label>
+            <textarea id="details" rows="4" placeholder="請敘述發生什麼事、現場如何處置..."></textarea>
+        </div>
+        <button type="button" onclick="submitData()">傳送紀錄</button>
+    </form>
+
+    <script>
+        // 【在這裡修改網址】請把下方引號內換成您剛剛拿到 Allow 後的 Google 網址
+        const GOOGLE_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbzZH-mHys1rAci6ZsPhl4n1vSKha_2lHMflTgfiLrlxHMtF4t4iPqMRom9tVdpeGav7QA/exec";
+
+        function toggleAnomaly() {
+            var status = document.getElementById("status").value;
+            var section = document.getElementById("anomalySection");
+            if (status === "異常") { section.classList.remove("hidden"); } 
+            else { section.classList.add("hidden"); document.getElementById("category").value = "無"; }
+        }
+
+        function submitData() {
+            var data = {
+                worker: document.getElementById("worker").value,
+                client: document.getElementById("client").value,
+                status: document.getElementById("status").value,
+                category: document.getElementById("category").value,
+                details: document.getElementById("details").value
+            };
+            
+            fetch(GOOGLE_WEB_APP_URL, {
+                method: "POST",
+                body: JSON.stringify(data)
+            }).then(res => {
+                alert("資料已成功同步至後台資料庫！");
+                document.getElementById("careForm").reset();
+                toggleAnomaly();
+            }).catch(err => alert("傳送失敗：" + err));
+        }
+    </script>
+</body>
+</html>
