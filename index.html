@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>小豆苗小作所每日服務紀錄-一頁式速記版</title>
+    <title>小豆苗日常服務紀錄-多向度矩陣速填版</title>
     <style>
         body { font-family: "Microsoft JhengHei", Arial, sans-serif; padding: 10px; background: #f4f7f6; color: #333; }
         .card { background: white; padding: 15px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); margin-bottom: 15px; }
@@ -12,159 +12,192 @@
         label { display: block; font-weight: bold; margin-bottom: 5px; color: #495057; }
         select, textarea { width: 100%; padding: 10px; box-sizing: border-box; border: 1px solid #ced4da; border-radius: 4px; font-size: 15px; }
         
-        /* 一頁式點名簿表格樣式 */
-        .client-row { border-bottom: 1px solid #dee2e6; padding: 12px 0; }
-        .client-row:last-child { border-bottom: none; }
-        .client-name { font-weight: bold; font-size: 16px; margin-bottom: 8px; color: #212529; }
+        /* 點名簿區塊與學員外框 */
+        .client-block { border: 1px solid #dee2e6; border-radius: 8px; padding: 12px; margin-bottom: 15px; background: #fff; }
+        .client-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #e9ecef; padding-bottom: 6px; margin-bottom: 10px; }
+        .client-name { font-weight: bold; font-size: 16px; color: #0056b3; }
         
-        /* 三項燈號並陳樣式 */
-        .radio-group { display: flex; gap: 6px; }
-        .radio-label { flex: 1; text-align: center; padding: 8px 4px; border: 2px solid #ced4da; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 13px; background: #f8f9fa; transition: all 0.15s; }
+        /* 出勤免填開關 */
+        .switch-label { font-size: 13px; font-weight: bold; color: #6c757d; cursor: pointer; }
         
-        input[value="未出勤/免填"]:checked + .radio-label { background: #e2e3e5; border-color: #6c757d; color: #383d41; }
+        /* 向度矩陣列 */
+        .dimension-row { margin-bottom: 12px; }
+        .dimension-title { font-size: 14px; font-weight: bold; margin-bottom: 4px; color: #495057; }
+        
+        /* 燈號小按鈕樣式 */
+        .radio-group { display: flex; gap: 4px; }
+        .radio-label { flex: 1; text-align: center; padding: 6px 2px; border: 1px solid #ced4da; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 12px; background: #f8f9fa; transition: all 0.15s; }
+        
         input[value="穩定獨立"]:checked + .radio-label { background: #d4edda; border-color: #28a745; color: #155724; }
         input[value="需提示/口語支持"]:checked + .radio-label { background: #fff3cd; border-color: #ffc107; color: #856404; }
         input[value="出現特殊事件/異常"]:checked + .radio-label { background: #f8d7da; border-color: #dc3545; color: #721c24; }
         input[type="radio"] { display: none; }
         
-        /* 異常展開區塊 */
-        .anomaly-box { background: #fff5f5; border: 1px dashed #dc3545; padding: 10px; border-radius: 6px; margin-top: 10px; }
-        .anomaly-box select { margin-bottom: 8px; background: white; }
+        /* 異常文字框 */
+        .text-box { background: #fff5f5; border: 1px dashed #dc3545; padding: 8px; border-radius: 4px; margin-top: 6px; }
         
-        button { background: #28a745; color: white; padding: 14px; border: none; border-radius: 6px; width: 100%; font-size: 18px; font-weight: bold; cursor: pointer; box-shadow: 0 3px 6px rgba(40,167,69,0.3); margin-top: 20px; }
+        button { background: #28a745; color: white; padding: 14px; border: none; border-radius: 6px; width: 100%; font-size: 18px; font-weight: bold; cursor: pointer; box-shadow: 0 3px 6px rgba(40,167,69,0.3); margin-top: 15px; }
         button:hover { background: #218838; }
-        .hidden { display: none; }
+        .disabled-block { opacity: 0.4; pointer-events: none; background: #e9ecef; }
     </style>
 </head>
 <body>
 
     <div class="card">
-        <h2>📱 小豆苗小作所每日服務紀錄-一頁式速記版</h2>
+        <h2>📱 小豆苗日常服務紀錄-多向度矩陣速填版</h2>
         <form id="careForm">
             
-            <!-- 1. 填報人下拉選單 -->
+            <!-- 1. 填報人 -->
             <div class="form-group">
                 <label>填報人員：</label>
                 <select id="worker" required>
                     <option value="" disabled selected>-- 請選擇您的姓名 --</option>
                     <option value="林芝玉教保員">林芝玉教保員</option>
                     <option value="伊蔓訇彥教保員">伊蔓訇彥教保員</option>
-                    <option value="張仁莉教保員">張仁莉教保員</option>
+                    <option value="李仁莉教保員">李仁莉教保員</option>
                     <option value="林醇檍社工">林醇檍社工</option>
                 </select>
             </div>
 
-            <!-- 2. 15位個案一頁式垂直列出 -->
+            <!-- 2. 15位個案垂直排列的大區塊 -->
             <div class="form-group">
-                <label>學員點名清單（未負責的學員請維持預設的「免填」）：</label>
-                <div id="clientContainer">
-                    <!-- 由 JavaScript 自動產生 15 個個案，方便管理 -->
-                </div>
+                <label>學員向度評分清單（今日未負責的學員請勾選「免填」）：</label>
+                <div id="clientContainer"></div>
             </div>
 
-            <button type="button" onclick="submitBatchData()">完成，一次送出所有勾選紀錄</button>
+            <button type="button" onclick="submitMatrixData()">確認，一次送出所有向度紀錄</button>
         </form>
     </div>
 
     <script>
         // ⚠️【請注意】這裡必須換成您在 Google 重新部署後拿到的那串 Web App 網址！
-        const GOOGLE_WEB_APP_URL = "https://script.google.com/macros/library/d/1JjlcZbhc9LVrImmtC-R2Rtg-akcZeqPkJhMUhn8mBFXJQ0RXU_Wb1TiD/2";
+        const GOOGLE_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbzZH-mHys1rAci6ZsPhl4n1vSKha_2lHMflTgfiLrlxHMtF4t4iPqMRom9tVdpeGav7QA/exec";
 
-        // 定義 15 位學員的名單（您可以在這裡自由修改名字）
         const clients = [
             "個案01旻哲", "個案02麗婷", "個案03宛玲", "個案04芳筑", "個案05上寧",
             "個案06建圻", "個案07力綺", "個案08芝穎", "個案09鍾晴", "個案10瑜庭",
             "個案11宇尊", "個案12姵筑", "個案13柏翰", "個案14壽圓", "個案15培佑"
         ];
 
-        // 自動動態渲染 15 個個案的一頁式介面
+        // 四個符合小作所場域適用的黃金向度
+        const dimensions = [
+            { id: "work", name: "技藝陶冶-分心或表現下滑" },
+            { id: "inter", name: "場域人際-同儕摩擦或言語衝突" },
+            { id: "safe", name: "規範遵守-未依規範或自理異常" },
+            { id: "env", name: "環境禮儀-外部適應不佳或溝通失當" }
+        ];
+
         const container = document.getElementById("clientContainer");
-        clients.forEach((name, index) => {
-            const row = document.createElement("div");
-            row.className = "client-row";
-            row.innerHTML = `
-                <div class="client-name">${name}</div>
-                <div class="radio-group">
-                    <input type="radio" id="m_${index}" name="status_${index}" value="未出車/免填" checked onclick="toggleAnomalyBox(${index}, false)">
-                    <label for="m_${index}" class="radio-label">⚪ 免填</label>
-
-                    <input type="radio" id="g_${index}" name="status_${index}" value="穩定獨立" onclick="toggleAnomalyBox(${index}, false)">
-                    <label for="g_${index}" class="radio-label">🟢 獨立</label>
-
-                    <input type="radio" id="y_${index}" name="status_${index}" value="需提示/口語支持" onclick="toggleAnomalyBox(${index}, false)">
-                    <label for="y_${index}" class="radio-label">🟡 提示</label>
-
-                    <input type="radio" id="r_${index}" name="status_${index}" value="出現特殊事件/異常" onclick="toggleAnomalyBox(${index}, true)">
-                    <label for="r_${index}" class="radio-label">🔴 異常</label>
+        
+        clients.forEach((cName, cIdx) => {
+            const block = document.createElement("div");
+            block.className = "client-block";
+            block.id = `block_${cIdx}`;
+            
+            // 建立個別個案的頂部標題與免填開關
+            let htmlStr = `
+                <div class="client-header">
+                    <div class="client-name">${cName}</div>
+                    <label class="switch-label">
+                        <input type="checkbox" id="skip_${cIdx}" checked onclick="toggleClientBlock(${cIdx})"> ⚪ 今日免填
+                    </label>
                 </div>
-                <div id="anomalyBox_${index}" class="anomaly-box hidden">
-                    <label>🚨 異常細分：</label>
-                    <select id="cat_${index}">
-                        <option value="無">無</option>
-                        <option value="環境因素-噪音引發自傷">環境因素 - 噪音引發自傷 (E-B)</option>
-                        <option value="人際衝突-同儕搶奪爭執">人際衝突 - 同儕搶奪爭執 (I-B)</option>
-                        <option value="生理因素-雙重老化疲憊">生理因素 - 雙重老化疲憊 (P-B)</option>
-                        <option value="工作產能-嚴重拒絕指令">工作產能 - 嚴重拒絕指令 (W-B)</option>
-                    </select>
-                    <label>✍️ 現場處置 SOAP 說明（可語音輸入）：</label>
-                    <textarea id="det_${index}" rows="2" placeholder="請輸入異常處置細節..."></textarea>
-                </div>
+                <div id="matrix_${cIdx}" class="disabled-block">
             `;
-            container.appendChild(row);
+            
+            // 迴圈渲染 4 個向度的矩陣按鈕
+            dimensions.forEach((dim) => {
+                htmlStr += `
+                    <div class="dimension-row">
+                        <div class="dimension-title">${dim.name}</div>
+                        <div class="radio-group">
+                            <input type="radio" id="r_${cIdx}_${dim.id}_1" name="status_${cIdx}_${dim.id}" value="穩定獨立" checked onclick="toggleText(${cIdx}, '${dim.id}', false)">
+                            <label for="r_${cIdx}_${dim.id}_1" class="radio-label">🟢 獨立</label>
+
+                            <input type="radio" id="r_${cIdx}_${dim.id}_2" name="status_${cIdx}_${dim.id}" value="需提示/口語支持" onclick="toggleText(${cIdx}, '${dim.id}', false)">
+                            <label for="r_${cIdx}_${dim.id}_2" class="radio-label">🟡 提示</label>
+
+                            <input type="radio" id="r_${cIdx}_${dim.id}_3" name="status_${cIdx}_${dim.id}" value="出現特殊事件/異常" onclick="toggleText(${cIdx}, '${dim.id}', true)">
+                            <label for="r_${cIdx}_${dim.id}_3" class="radio-label">🔴 異常</label>
+                        </div>
+                        <div id="text_${cIdx}_${dim.id}" class="text-box hidden">
+                            <textarea id="input_${cIdx}_${dim.id}" rows="2" placeholder="🚨 請輸入此項向度的紅燈 SOAP 處置說明..."></textarea>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            htmlStr += `</div>`;
+            block.innerHTML = htmlStr;
+            container.appendChild(block);
         });
 
-        function toggleAnomalyBox(index, isAnomaly) {
-            const box = document.getElementById(`anomalyBox_${index}`);
-            if (isAnomaly) {
-                box.classList.remove("hidden");
+        // 控制該名學員今天有沒有出勤/要不要填寫
+        function toggleClientBlock(cIdx) {
+            const isSkip = document.getElementById(`skip_${cIdx}`).checked;
+            const matrix = document.getElementById(`matrix_${cIdx}`);
+            if (isSkip) {
+                matrix.classList.add("disabled-block");
             } else {
-                box.classList.add("hidden");
-                document.getElementById(`cat_${index}`).value = "無";
-                document.getElementById(`det_${index}`).value = "";
+                matrix.classList.remove("disabled-block");
             }
         }
 
-        function submitBatchData() {
+        // 當點選紅燈時，自動彈出特定向度的文字說明框
+        function toggleText(cIdx, dimId, isRed) {
+            const textBox = document.getElementById(`text_${cIdx}_${dimId}`);
+            if (isRed) {
+                textBox.classList.remove("hidden");
+            } else {
+                textBox.classList.add("hidden");
+                document.getElementById(`input_${cIdx}_${dimId}`).value = "";
+            }
+        }
+
+        function submitMatrixData() {
             var worker = document.getElementById("worker").value;
             if(!worker) { alert("請先選擇您的姓名！"); return; }
 
             var recordsToSend = [];
 
-            // 跑迴圈檢查 15 個人分別勾了什麼
-            clients.forEach((name, index) => {
-                var statusRadio = document.querySelector(`input[name="status_${index}"]:checked`);
-                var statusValue = statusRadio ? statusRadio.value : "未出車/免填";
+            clients.forEach((cName, cIdx) => {
+                const isSkip = document.getElementById(`skip_${cIdx}`).checked;
+                
+                // 只有「取消勾選免填」的人，代表今天有紀錄，才去撈資料
+                if (!isSkip) {
+                    dimensions.forEach((dim) => {
+                        var statusRadio = document.querySelector(`input[name="status_${cIdx}_${dim.id}"]:checked`);
+                        var statusValue = statusRadio ? statusRadio.value : "穩定獨立";
+                        var detailsText = document.getElementById(`input_${cIdx}_${dim.id}`).value || "";
 
-                // 核心防呆：如果留著「⚪ 免填」，代表今天不是我帶的，不抓取資料
-                if (statusValue !== "未出勤/免填") {
-                    recordsToSend.push({
-                        client: name,
-                        status: statusValue,
-                        category: document.getElementById(`cat_${index}`).value || "無",
-                        details: document.getElementById(`det_${index}`).value || ""
+                        // 將每個人、每個向度拆開成獨立一筆上傳
+                        recordsToSend.push({
+                            client: cName,
+                            dimension: dim.name,
+                            status: statusValue,
+                            details: detailsText
+                        });
                     });
                 }
             });
 
             if (recordsToSend.length === 0) {
-                alert("您今天沒有勾選任何一位學員的表現（皆為免填狀態），無法傳送！");
+                alert("您目前所有學員皆維持免填狀態，無法送出！");
                 return;
             }
 
-            // 打包成一大包 JSON
-            var packet = {
-                worker: worker,
-                records: recordsToSend
-            };
+            var packet = { worker: worker, records: recordsToSend };
             
             fetch(GOOGLE_WEB_APP_URL, {
                 method: "POST",
                 body: JSON.stringify(packet)
             }).then(res => {
-                alert("👍 成功批次上傳 " + recordsToSend.length + " 位學員的今日紀錄！");
-                // 成功後重設表單
+                alert("👍 成功批次上傳多向度矩陣紀錄！共計 " + (recordsToSend.length / 4) + " 位學員。");
                 document.getElementById("careForm").reset();
-                clients.forEach((_, index) => toggleAnomalyBox(index, false));
+                clients.forEach((_, cIdx) => {
+                    document.getElementById(`matrix_${cIdx}`).classList.add("disabled-block");
+                    dimensions.forEach(dim => toggleText(cIdx, dim.id, false));
+                });
                 window.scrollTo(0, 0);
             }).catch(err => alert("傳送失敗，請檢查網路：" + err));
         }
