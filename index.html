@@ -3,26 +3,30 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>外售每日紀錄深化版</title>
+    <title>外售每日紀錄-15人固定版</title>
     <style>
-        body { font-family: "Microsoft JhengHei", Arial, sans-serif; padding: 20px; background: #f4f7f6; color: #333; }
+        body { font-family: "Microsoft JhengHei", Arial, sans-serif; padding: 15px; background: #f4f7f6; color: #333; }
         .card { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); margin-bottom: 20px; }
-        h2 { color: #0056b3; margin-top: 0; text-align: center; }
+        h2 { color: #0056b3; margin-top: 0; text-align: center; font-size: 20px; }
         .form-group { margin-bottom: 18px; }
         label { display: block; font-weight: bold; margin-bottom: 8px; color: #495057; }
         input, select, textarea { width: 100%; padding: 12px; box-sizing: border-box; border: 1px solid #ced4da; border-radius: 4px; font-size: 16px; }
         
-        /* 並陳點選按鈕樣式 */
-        .radio-group { display: flex; gap: 10px; margin-top: 5px; }
-        .radio-label { flex: 1; text-align: center; padding: 12px; border: 2px solid #ced4da; border-radius: 6px; cursor: pointer; font-weight: bold; transition: all 0.2s; }
-        
-        /* 狀態顏色微調 */
+        /* 15位個案名牌網格版面 */
+        .client-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 5px; }
+        .client-label { text-align: center; padding: 10px 5px; border: 2px solid #ced4da; border-radius: 6px; cursor: pointer; font-size: 14px; font-weight: bold; background: #fff; transition: all 0.2s; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        input[name="client"]:checked + .client-label { background: #0056b3; border-color: #004085; color: white; box-shadow: 0 2px 4px rgba(0,86,179,0.3); }
+        input[name="client"] { display: none; }
+
+        /* 三項專業向度並陳樣式 */
+        .radio-group { display: flex; gap: 8px; margin-top: 5px; }
+        .radio-label { flex: 1; text-align: center; padding: 12px 5px; border: 2px solid #ced4da; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 14px; transition: all 0.2s; }
         input[value="穩定獨立"]:checked + .radio-label { background: #d4edda; border-color: #28a745; color: #155724; }
         input[value="需提示/口語支持"]:checked + .radio-label { background: #fff3cd; border-color: #ffc107; color: #856404; }
         input[value="出現特殊事件/異常"]:checked + .radio-label { background: #f8d7da; border-color: #dc3545; color: #721c24; }
-        
         input[type="radio"] { display: none; }
-        button { background: #0056b3; color: white; padding: 14px; border: none; border-radius: 4px; width: 100%; font-size: 18px; font-weight: bold; cursor: pointer; box-shadow: 0 2px 4px rgba(0,0,0,0.2); }
+        
+        button { background: #0056b3; color: white; padding: 14px; border: none; border-radius: 4px; width: 100%; font-size: 18px; font-weight: bold; cursor: pointer; box-shadow: 0 2px 4px rgba(0,0,0,0.2); margin-top: 10px; }
         button:hover { background: #004085; }
         .hidden { display: none; }
     </style>
@@ -30,43 +34,43 @@
 <body>
 
     <div class="card">
-        <h2>📱 外售日常照顧紀錄 (深化版)</h2>
+        <h2>📱 外售日常照顧紀錄 (15人固定版)</h2>
         <form id="careForm">
             
-            <!-- 1. 填報人改為下拉式選單 -->
+            <!-- 1. 填報人下拉選單 -->
             <div class="form-group">
-                <label>填報教保員/專業人員：</label>
+                <label>填報人員：</label>
                 <select id="worker" required>
                     <option value="" disabled selected>-- 請選擇您的姓名 --</option>
-                    <option value="林芝玉">林芝玉</option>
-                    <option value="伊蔓訇彥">伊蔓訇彥</option>
-                    <option value="李仁莉">李仁莉</option>
-                    <option value="林醇檍">林醇檍</option>
+                    <option value="林教保">林教保</option>
+                    <option value="伊蔓教保">伊蔓教保</option>
+                    <option value="張教保">張教保</option>
+                    <option value="林社工">林社工</option>
                 </select>
             </div>
 
-           <!-- 2. 固定15位個案名牌顯示（網格點選） -->
+            <!-- 2. 固定15位個案名牌顯示（網格點選） -->
             <div class="form-group">
                 <label>服務對象（請點選一位學員）：</label>
                 <div class="client-grid">
                     <!-- 個案1~5 -->
                     <input type="radio" id="c1" name="client" value="個案01 (旻哲)"><label for="c1" class="client-label">個案01旻哲</label>
-                    <input type="radio" id="c2" name="client" value="個案02 (麗婷)"><label for="c2" class="client-label">個案02麗婷</label>
-                    <input type="radio" id="c3" name="client" value="個案03 (宛玲)"><label for="c3" class="client-label">個案03宛玲</label>
-                    <input type="radio" id="c4" name="client" value="個案04 (芳筑)"><label for="c4" class="client-label">個案04芳筑</label>
-                    <input type="radio" id="c5" name="client" value="個案05 (上寧)"><label for="c5" class="client-label">個案05上寧</label>
+                    <input type="radio" id="c2" name="client" value="個案02 (小華)"><label for="c2" class="client-label">個案02小華</label>
+                    <input type="radio" id="c3" name="client" value="個案03 (阿豪)"><label for="c3" class="client-label">個案03阿豪</label>
+                    <input type="radio" id="c4" name="client" value="個案04 (小美)"><label for="c4" class="client-label">個案04小美</label>
+                    <input type="radio" id="c5" name="client" value="個案05 (阿寶)"><label for="c5" class="client-label">個案05阿寶</label>
                     <!-- 個案6~10 -->
-                    <input type="radio" id="c6" name="client" value="個案06 (建圻)"><label for="c6" class="client-label">個案06建圻</label>
-                    <input type="radio" id="c7" name="client" value="個案07 (力綺)"><label for="c7" class="client-label">個案07力綺</label>
-                    <input type="radio" id="c8" name="client" value="個案08 (芝穎)"><label for="c8" class="client-label">個案08芝穎</label>
-                    <input type="radio" id="c9" name="client" value="個案09 (鍾晴)"><label for="c9" class="client-label">個案09鍾晴</label>
-                    <input type="radio" id="c10" name="client" value="個案10 (瑜庭)"><label for="c10" class="client-label">個案10瑜庭</label>
+                    <input type="radio" id="c6" name="client" value="個案06 (小傑)"><label for="c6" class="client-label">個案06小傑</label>
+                    <input type="radio" id="c7" name="client" value="個案07 (大華)"><label for="c7" class="client-label">個案07大華</label>
+                    <input type="radio" id="c8" name="client" value="個案08 (婷婷)"><label for="c8" class="client-label">個案08婷婷</label>
+                    <input type="radio" id="c9" name="client" value="個案09 (志明)"><label for="c9" class="client-label">個案09志明</label>
+                    <input type="radio" id="c10" name="client" value="個案10 (春嬌)"><label for="c10" class="client-label">個案10春嬌</label>
                     <!-- 個案11~15 -->
-                    <input type="radio" id="c11" name="client" value="個案11 (宇尊)"><label for="c11" class="client-label">個案11宇尊</label>
-                    <input type="radio" id="c12" name="client" value="個案12 (姵筑)"><label for="c12" class="client-label">個案12姵筑</label>
-                    <input type="radio" id="c13" name="client" value="個案13 (柏翰)"><label for="c13" class="client-label">個案13柏翰</label>
-                    <input type="radio" id="c14" name="client" value="個案14 (壽圓)"><label for="c14" class="client-label">個案14壽圓</label>
-                    <input type="radio" id="c15" name="client" value="個案15 (培佑)"><label for="c15" class="client-label">個案15培佑</label>
+                    <input type="radio" id="c11" name="client" value="個案11 (阿強)"><label for="c11" class="client-label">個案11阿強</label>
+                    <input type="radio" id="c12" name="client" value="個案12 (小麗)"><label for="c12" class="client-label">個案12小麗</label>
+                    <input type="radio" id="c13" name="client" value="個案13 (小宇)"><label for="c13" class="client-label">個案13小宇</label>
+                    <input type="radio" id="c14" name="client" value="個案14 (萱萱)"><label for="c14" class="client-label">個案14萱萱</label>
+                    <input type="radio" id="c15" name="client" value="個案15 (小達)"><label for="c15" class="client-label">個案15小達</label>
                 </div>
             </div>
 
@@ -85,7 +89,7 @@
                 </div>
             </div>
 
-            <!-- 4. 僅在點選🔴出現異常時，才會主動彈出的細部選單 -->
+            <!-- 4. 異常細部功能分類 -->
             <div id="anomalySection" class="form-group hidden">
                 <label>異常行為細部功能分類：</label>
                 <select id="category">
@@ -99,8 +103,8 @@
 
             <!-- 5. 現場詳情（支持語音輸入） -->
             <div class="form-group">
-                <label>現場處置與詳細說明（可按鍵盤麥克風用語音輸入）：</label>
-                <textarea id="details" rows="4" placeholder="請精簡敘事：發生何事(S/O)、如何處置與支持(A/P)..."></textarea>
+                <label>現場處置與詳細說明（可用語音輸入）：</label>
+                <textarea id="details" rows="3" placeholder="請精簡敘事：發生何事(S/O)、如何處置與支持(A/P)..."></textarea>
             </div>
 
             <button type="button" onclick="submitData()">確認並傳送紀錄</button>
@@ -108,30 +112,29 @@
     </div>
 
     <script>
-        // ⚠️【請注意】這裡必須換成您之前在 Google 拿到 Allow 後的那串 Web App 網址！
+        // ⚠️【請注意】這裡必須換成您剛剛重新複製出來的那串 Google Apps Script URL！
         const GOOGLE_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbzZH-mHys1rAci6ZsPhl4n1vSKha_2lHMflTgfiLrlxHMtF4t4iPqMRom9tVdpeGav7QA/exec";
 
         function toggleAnomaly(isAnomaly) {
             var section = document.getElementById("anomalySection");
-            if (isAnomaly) {
-                section.classList.remove("hidden");
-            } else {
-                section.classList.add("hidden");
-                document.getElementById("category").value = "無";
-            }
+            if (isAnomaly) { section.classList.remove("hidden"); } 
+            else { section.classList.add("hidden"); document.getElementById("category").value = "無"; }
         }
 
         function submitData() {
             var worker = document.getElementById("worker").value;
             if(!worker) { alert("請先選擇您的姓名！"); return; }
 
-            // 抓取被點選的單選鈕數值
+            // 檢查有沒有點選服務對象
+            var clientRadio = document.querySelector('input[name="client"]:checked');
+            if(!clientRadio) { alert("請先點選一位服務對象（學員）！"); return; }
+
             var statusRadio = document.querySelector('input[name="status"]:checked');
             var statusValue = statusRadio ? statusRadio.value : "穩定獨立";
 
             var data = {
                 worker: worker,
-                client: document.getElementById("client").value,
+                client: clientRadio.value,
                 status: statusValue,
                 category: document.getElementById("category").value,
                 details: document.getElementById("details").value
@@ -141,9 +144,10 @@
                 method: "POST",
                 body: JSON.stringify(data)
             }).then(res => {
-                alert("👍 資料已成功無紙化同步至後台資料庫！");
+                alert("👍 " + clientRadio.value + " 的紀錄已成功同步！");
                 document.getElementById("details").value = "";
-                // 重設狀態為正常
+                // 重設狀態，讓名牌與按鈕回歸預設，方便填寫下一個人
+                clientRadio.checked = false;
                 document.getElementById("status1").checked = true;
                 toggleAnomaly(false);
             }).catch(err => alert("傳送失敗，請檢查網路連線：" + err));
