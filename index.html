@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>外售日常照顧紀錄-一頁式點名版</title>
+    <title>小豆苗小作所每日服務紀錄-一頁式速記版</title>
     <style>
         body { font-family: "Microsoft JhengHei", Arial, sans-serif; padding: 10px; background: #f4f7f6; color: #333; }
         .card { background: white; padding: 15px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); margin-bottom: 15px; }
@@ -21,7 +21,7 @@
         .radio-group { display: flex; gap: 6px; }
         .radio-label { flex: 1; text-align: center; padding: 8px 4px; border: 2px solid #ced4da; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 13px; background: #f8f9fa; transition: all 0.15s; }
         
-        input[value="未出車/免填"]:checked + .radio-label { background: #e2e3e5; border-color: #6c757d; color: #383d41; }
+        input[value="未出勤/免填"]:checked + .radio-label { background: #e2e3e5; border-color: #6c757d; color: #383d41; }
         input[value="穩定獨立"]:checked + .radio-label { background: #d4edda; border-color: #28a745; color: #155724; }
         input[value="需提示/口語支持"]:checked + .radio-label { background: #fff3cd; border-color: #ffc107; color: #856404; }
         input[value="出現特殊事件/異常"]:checked + .radio-label { background: #f8d7da; border-color: #dc3545; color: #721c24; }
@@ -39,7 +39,7 @@
 <body>
 
     <div class="card">
-        <h2>📱 外售日常照顧紀錄 (一頁式點名版)</h2>
+        <h2>📱 小豆苗小作所每日服務紀錄-一頁式速記版</h2>
         <form id="careForm">
             
             <!-- 1. 填報人下拉選單 -->
@@ -136,7 +136,7 @@
                 var statusValue = statusRadio ? statusRadio.value : "未出車/免填";
 
                 // 核心防呆：如果留著「⚪ 免填」，代表今天不是我帶的，不抓取資料
-                if (statusValue !== "未出車/免填") {
+                if (statusValue !== "未出勤/免填") {
                     recordsToSend.push({
                         client: name,
                         status: statusValue,
