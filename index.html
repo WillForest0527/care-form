@@ -3,69 +3,136 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>外售每日紀錄勾選</title>
+    <title>外售每日紀錄深化版</title>
     <style>
-        body { font-family: Arial, sans-serif; padding: 20px; background: #f4f7f6; }
-        .form-group { margin-bottom: 15px; }
-        label { display: block; font-weight: bold; margin-bottom: 5px; }
-        input, select, textarea { width: 100%; padding: 10px; box-sizing: border-box; border: 1px solid #ccc; border-radius: 4px; }
-        button { background: #007BFF; color: white; padding: 12px; border: none; border-radius: 4px; width: 100%; font-size: 16px; cursor: pointer; }
+        body { font-family: "Microsoft JhengHei", Arial, sans-serif; padding: 20px; background: #f4f7f6; color: #333; }
+        .card { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); margin-bottom: 20px; }
+        h2 { color: #0056b3; margin-top: 0; text-align: center; }
+        .form-group { margin-bottom: 18px; }
+        label { display: block; font-weight: bold; margin-bottom: 8px; color: #495057; }
+        input, select, textarea { width: 100%; padding: 12px; box-sizing: border-box; border: 1px solid #ced4da; border-radius: 4px; font-size: 16px; }
+        
+        /* 並陳點選按鈕樣式 */
+        .radio-group { display: flex; gap: 10px; margin-top: 5px; }
+        .radio-label { flex: 1; text-align: center; padding: 12px; border: 2px solid #ced4da; border-radius: 6px; cursor: pointer; font-weight: bold; transition: all 0.2s; }
+        
+        /* 狀態顏色微調 */
+        input[value="穩定獨立"]:checked + .radio-label { background: #d4edda; border-color: #28a745; color: #155724; }
+        input[value="需提示/口語支持"]:checked + .radio-label { background: #fff3cd; border-color: #ffc107; color: #856404; }
+        input[value="出現特殊事件/異常"]:checked + .radio-label { background: #f8d7da; border-color: #dc3545; color: #721c24; }
+        
+        input[type="radio"] { display: none; }
+        button { background: #0056b3; color: white; padding: 14px; border: none; border-radius: 4px; width: 100%; font-size: 18px; font-weight: bold; cursor: pointer; box-shadow: 0 2px 4px rgba(0,0,0,0.2); }
+        button:hover { background: #004085; }
         .hidden { display: none; }
     </style>
 </head>
 <body>
-    <h2>📱 外售日常照顧紀錄</h2>
-    <form id="careForm">
-        <div class="form-group">
-            <label>填報教保員：</label>
-            <input type="text" id="worker" required placeholder="請輸入您的姓名">
-        </div>
-        <div class="form-group">
-            <label>個別學員姓名：</label>
-            <select id="client">
-                <option value="個案A(小明)">個案A (小明)</option>
-                <option value="個案B(小華)">個案B (小華)</option>
-            </select>
-        </div>
-        <div class="form-group">
-            <label>今日狀態：</label>
-            <select id="status" onchange="toggleAnomaly()">
-                <option value="正常">🟢 穩定正常</option>
-                <option value="異常">🔴 出現異常</option>
-            </select>
-        </div>
-        <div id="anomalySection" class="form-group hidden">
-            <label>異常細部功能分類：</label>
-            <select id="category">
-                <option value="無">無</option>
-                <option value="環境因素-噪音自傷">環境因素 - 噪音自傷</option>
-                <option value="人際衝突-同儕搶奪">人際衝突 - 同儕搶奪</option>
-                <option value="生理因素-情緒過載">生理因素 - 情緒過載</option>
-            </select>
-        </div>
-        <div class="form-group">
-            <label>現場處置與詳情（可按語音輸入）：</label>
-            <textarea id="details" rows="4" placeholder="請敘述發生什麼事、現場如何處置..."></textarea>
-        </div>
-        <button type="button" onclick="submitData()">傳送紀錄</button>
-    </form>
+
+    <div class="card">
+        <h2>📱 外售日常照顧紀錄 (深化版)</h2>
+        <form id="careForm">
+            
+            <!-- 1. 填報人改為下拉式選單 -->
+            <div class="form-group">
+                <label>填報教保員/專業人員：</label>
+                <select id="worker" required>
+                    <option value="" disabled selected>-- 請選擇您的姓名 --</option>
+                    <option value="林芝玉">林芝玉</option>
+                    <option value="伊蔓訇彥">伊蔓訇彥</option>
+                    <option value="李仁莉">李仁莉</option>
+                    <option value="林醇檍">林醇檍</option>
+                </select>
+            </div>
+
+           <!-- 2. 固定15位個案名牌顯示（網格點選） -->
+            <div class="form-group">
+                <label>服務對象（請點選一位學員）：</label>
+                <div class="client-grid">
+                    <!-- 個案1~5 -->
+                    <input type="radio" id="c1" name="client" value="個案01 (旻哲)"><label for="c1" class="client-label">個案01旻哲</label>
+                    <input type="radio" id="c2" name="client" value="個案02 (麗婷)"><label for="c2" class="client-label">個案02麗婷</label>
+                    <input type="radio" id="c3" name="client" value="個案03 (宛玲)"><label for="c3" class="client-label">個案03宛玲</label>
+                    <input type="radio" id="c4" name="client" value="個案04 (芳筑)"><label for="c4" class="client-label">個案04芳筑</label>
+                    <input type="radio" id="c5" name="client" value="個案05 (上寧)"><label for="c5" class="client-label">個案05上寧</label>
+                    <!-- 個案6~10 -->
+                    <input type="radio" id="c6" name="client" value="個案06 (建圻)"><label for="c6" class="client-label">個案06建圻</label>
+                    <input type="radio" id="c7" name="client" value="個案07 (力綺)"><label for="c7" class="client-label">個案07力綺</label>
+                    <input type="radio" id="c8" name="client" value="個案08 (芝穎)"><label for="c8" class="client-label">個案08芝穎</label>
+                    <input type="radio" id="c9" name="client" value="個案09 (鍾晴)"><label for="c9" class="client-label">個案09鍾晴</label>
+                    <input type="radio" id="c10" name="client" value="個案10 (瑜庭)"><label for="c10" class="client-label">個案10瑜庭</label>
+                    <!-- 個案11~15 -->
+                    <input type="radio" id="c11" name="client" value="個案11 (宇尊)"><label for="c11" class="client-label">個案11宇尊</label>
+                    <input type="radio" id="c12" name="client" value="個案12 (姵筑)"><label for="c12" class="client-label">個案12姵筑</label>
+                    <input type="radio" id="c13" name="client" value="個案13 (柏翰)"><label for="c13" class="client-label">個案13柏翰</label>
+                    <input type="radio" id="c14" name="client" value="個案14 (壽圓)"><label for="c14" class="client-label">個案14壽圓</label>
+                    <input type="radio" id="c15" name="client" value="個案15 (培佑)"><label for="c15" class="client-label">個案15培佑</label>
+                </div>
+            </div>
+
+            <!-- 3. 三項專業向度並陳點選 -->
+            <div class="form-group">
+                <label>今日服務執行狀態評估：</label>
+                <div class="radio-group">
+                    <input type="radio" id="status1" name="status" value="穩定獨立" checked onclick="toggleAnomaly(false)">
+                    <label for="status1" class="radio-label">🟢 穩定獨立</label>
+
+                    <input type="radio" id="status2" name="status" value="需提示/口語支持" onclick="toggleAnomaly(false)">
+                    <label for="status2" class="radio-label">🟡 需提示引導</label>
+
+                    <input type="radio" id="status3" name="status" value="出現特殊事件/異常" onclick="toggleAnomaly(true)">
+                    <label for="status3" class="radio-label">🔴 出現異常</label>
+                </div>
+            </div>
+
+            <!-- 4. 僅在點選🔴出現異常時，才會主動彈出的細部選單 -->
+            <div id="anomalySection" class="form-group hidden">
+                <label>異常行為細部功能分類：</label>
+                <select id="category">
+                    <option value="無" selected>無</option>
+                    <option value="環境因素-噪音引發自傷">環境因素 - 噪音引發自傷 (E-B)</option>
+                    <option value="人際衝突-同儕搶奪爭執">人際衝突 - 同儕搶奪爭執 (I-B)</option>
+                    <option value="生理因素-雙重老化疲憊">生理因素 - 雙重老化疲憊 (P-B)</option>
+                    <option value="工作產能-嚴重拒絕指令">工作產能 - 嚴重拒絕指令 (W-B)</option>
+                </select>
+            </div>
+
+            <!-- 5. 現場詳情（支持語音輸入） -->
+            <div class="form-group">
+                <label>現場處置與詳細說明（可按鍵盤麥克風用語音輸入）：</label>
+                <textarea id="details" rows="4" placeholder="請精簡敘事：發生何事(S/O)、如何處置與支持(A/P)..."></textarea>
+            </div>
+
+            <button type="button" onclick="submitData()">確認並傳送紀錄</button>
+        </form>
+    </div>
 
     <script>
-        // 【在這裡修改網址】請把下方引號內換成您剛剛拿到 Allow 後的 Google 網址
+        // ⚠️【請注意】這裡必須換成您之前在 Google 拿到 Allow 後的那串 Web App 網址！
         const GOOGLE_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbzZH-mHys1rAci6ZsPhl4n1vSKha_2lHMflTgfiLrlxHMtF4t4iPqMRom9tVdpeGav7QA/exec";
 
-        function toggleAnomaly() {
-            var status = document.getElementById("status").value;
+        function toggleAnomaly(isAnomaly) {
             var section = document.getElementById("anomalySection");
-            if (status === "異常") { section.classList.remove("hidden"); } 
-            else { section.classList.add("hidden"); document.getElementById("category").value = "無"; }
+            if (isAnomaly) {
+                section.classList.remove("hidden");
+            } else {
+                section.classList.add("hidden");
+                document.getElementById("category").value = "無";
+            }
         }
 
         function submitData() {
+            var worker = document.getElementById("worker").value;
+            if(!worker) { alert("請先選擇您的姓名！"); return; }
+
+            // 抓取被點選的單選鈕數值
+            var statusRadio = document.querySelector('input[name="status"]:checked');
+            var statusValue = statusRadio ? statusRadio.value : "穩定獨立";
+
             var data = {
-                worker: document.getElementById("worker").value,
+                worker: worker,
                 client: document.getElementById("client").value,
-                status: document.getElementById("status").value,
+                status: statusValue,
                 category: document.getElementById("category").value,
                 details: document.getElementById("details").value
             };
@@ -74,10 +141,12 @@
                 method: "POST",
                 body: JSON.stringify(data)
             }).then(res => {
-                alert("資料已成功同步至後台資料庫！");
-                document.getElementById("careForm").reset();
-                toggleAnomaly();
-            }).catch(err => alert("傳送失敗：" + err));
+                alert("👍 資料已成功無紙化同步至後台資料庫！");
+                document.getElementById("details").value = "";
+                // 重設狀態為正常
+                document.getElementById("status1").checked = true;
+                toggleAnomaly(false);
+            }).catch(err => alert("傳送失敗，請檢查網路連線：" + err));
         }
     </script>
 </body>
